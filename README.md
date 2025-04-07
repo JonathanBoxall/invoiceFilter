@@ -12,14 +12,14 @@ How it works:
 6. If the script is confident + invoice number is not a duplicate, invoice will be sent to processing folder (to be replaced by automatically sending to CRM once highly confident + in actual use)
 
 Libraries used:
-os
-re
-pytesseract
-pdfplumber
-docx
-pandas
-Image from PIL 
-shutil
+1. os
+2. re
+3. pytesseract
+4. pdfplumber
+5. docx
+6. pandas
+7. Image from PIL 
+8. shutil
 
 Future improvements:
 
