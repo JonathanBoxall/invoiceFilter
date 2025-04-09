@@ -25,6 +25,7 @@ os.makedirs(likely_duplicates_folder, exist_ok=True)
 invoice_pattern = re.compile(r"(Invoice\s*No[:#]?\s*|Inv\s*[:#]?\s*|Inv\.?#?)\s*(\d+)", re.IGNORECASE)
 abn_pattern = re.compile(r"\bABN[:\s]*([0-9 ]{11,20})\b", re.IGNORECASE)
 
+#function to extract invoice number from text
 def extract_invoice_number(text):
     match = invoice_pattern.search(text)
     if match:
@@ -32,6 +33,7 @@ def extract_invoice_number(text):
     fallback = re.search(r"\b\d{4,}\b", text)
     return fallback.group(0) if fallback else None
 
+#function to extract ABN number from text
 def extract_abn(text):
     match = abn_pattern.search(text)
     if match:
@@ -39,6 +41,7 @@ def extract_abn(text):
     fallback = re.search(r"\b\d{11}\b", text)
     return fallback.group(0) if fallback else None
 
+#Function to extract text from PDF files
 def extract_text_from_pdf(filepath):
     try:
         with pdfplumber.open(filepath) as pdf:
@@ -47,6 +50,7 @@ def extract_text_from_pdf(filepath):
         print(f"❌ Error processing {os.path.basename(filepath)}: {e}")
         return ""
 
+#Function to extract text from docx files
 def extract_text_from_docx(filepath):
     try:
         doc = docx.Document(filepath)
@@ -54,7 +58,8 @@ def extract_text_from_docx(filepath):
     except Exception as e:
         print(f"❌ Error processing {os.path.basename(filepath)}: {e}")
         return ""
-
+    
+#Function to extract text from excel files
 def extract_text_from_excel(filepath):
     try:
         df = pd.read_excel(filepath, engine='openpyxl')
@@ -63,6 +68,7 @@ def extract_text_from_excel(filepath):
         print(f"❌ Error processing {os.path.basename(filepath)}: {e}")
         return ""
 
+#function to extract text from an image
 def extract_text_from_image(filepath):
     try:
         img = Image.open(filepath).convert('L')
@@ -75,16 +81,19 @@ def extract_text_from_image(filepath):
         print(f"❌ Error processing {os.path.basename(filepath)}: {e}")
         return "", 0
 
+#Function to load processed records from a log file
 def load_processed_records():
     if os.path.exists(log_file):
         with open(log_file, "r") as file:
             return set(file.read().splitlines())
     return set()
 
+#Function to save processed records to a log file
 def save_processed_record(abn, invoice_number, filename):
     with open(log_file, "a") as file:
         file.write(f"{abn}|{invoice_number}|{filename}\n")
 
+#handles duplicate file names by renaming them
 def move_file_safely(src, dest_folder):
     os.makedirs(dest_folder, exist_ok=True)
     base_name = os.path.basename(src)
@@ -99,6 +108,7 @@ def move_file_safely(src, dest_folder):
     shutil.move(src, dest_path)
     return dest_path
 
+#Function to process files. This function will iterate through the test folder, extract text from files, and move them to appropriate folders based on the results.
 def process_test_files():
     processed_records = load_processed_records()
 
