@@ -47,7 +47,7 @@ def extract_text_from_pdf(filepath):
         with pdfplumber.open(filepath) as pdf:
             return " ".join([page.extract_text() for page in pdf.pages if page.extract_text()])
     except Exception as e:
-        print(f"❌ Error processing {os.path.basename(filepath)}: {e}")
+        print(f"Error processing {os.path.basename(filepath)}: {e}")
         return ""
 
 #Function to extract text from docx files
@@ -56,7 +56,7 @@ def extract_text_from_docx(filepath):
         doc = docx.Document(filepath)
         return " ".join([para.text for para in doc.paragraphs])
     except Exception as e:
-        print(f"❌ Error processing {os.path.basename(filepath)}: {e}")
+        print(f"Error processing {os.path.basename(filepath)}: {e}")
         return ""
     
 #Function to extract text from excel files
@@ -65,7 +65,7 @@ def extract_text_from_excel(filepath):
         df = pd.read_excel(filepath, engine='openpyxl')
         return " ".join(df.astype(str).values.flatten())
     except Exception as e:
-        print(f"❌ Error processing {os.path.basename(filepath)}: {e}")
+        print(f"Error processing {os.path.basename(filepath)}: {e}")
         return ""
 
 #function to extract text from an image
@@ -78,7 +78,7 @@ def extract_text_from_image(filepath):
         avg_confidence = sum(confidence) / len(confidence) if confidence else 0
         return text, avg_confidence
     except Exception as e:
-        print(f"❌ Error processing {os.path.basename(filepath)}: {e}")
+        print(f"Error processing {os.path.basename(filepath)}: {e}")
         return "", 0
 
 #Function to load processed records from a log file
@@ -136,7 +136,7 @@ def process_test_files():
                 low_confidence = True
         else:
             move_file_safely(filepath, enquiries_folder)
-            print(f"📥 {filename} moved to Enquiries (unsupported format)")
+            print(f"{filename} moved to Enquiries (unsupported format)")
             continue
 
         # Debug: show extracted text preview
@@ -155,7 +155,7 @@ def process_test_files():
 
             if any(entry.startswith(duplicate_check_key + "|") for entry in processed_records):
                 move_file_safely(filepath, likely_duplicates_folder)
-                print(f"⚠️ Duplicate found for ABN {abn}, Invoice {invoice_number}. Moved to Likely Duplicates")
+                print(f"Duplicate found for ABN {abn}, Invoice {invoice_number}. Moved to Likely Duplicates")
                 continue
 
             save_processed_record(abn, invoice_number, filename)
@@ -163,13 +163,13 @@ def process_test_files():
 
             if low_confidence:
                 move_file_safely(filepath, manual_review_folder)
-                print(f"📥 Moved to Manual Review (low OCR confidence)")
+                print(f"Moved to Manual Review (low OCR confidence)")
             else:
                 move_file_safely(filepath, processed_folder)
-                print(f"✅ Processed successfully")
+                print(f"Processed successfully")
         else:
             move_file_safely(filepath, manual_review_folder)
-            print(f"📥 No invoice number or ABN found. Sent to Manual Review")
+            print(f" No invoice number or ABN found. Sent to Manual Review")
 
 if __name__ == "__main__":
     process_test_files()
