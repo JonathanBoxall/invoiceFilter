@@ -21,6 +21,11 @@ Libraries used:
 7. Image from PIL 
 8. shutil
 
+To be implemented:
+
+1. ABN and filename matching for duplicates
+2. Outlook implementation - needs access to a clone of the inbox/small amount to trial with
+
 Future improvements:
 
 Once this system is deployed, future improvements could include the following. 
